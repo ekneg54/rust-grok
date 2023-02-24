@@ -13,7 +13,7 @@ pub struct Grok {
 impl Grok {
     #[new]
     pub fn __new__(pattern_str: &str) -> PyResult<Self> {
-        let mut obj = grok::Grok::with_default_patterns();
+        let mut obj: grok::Grok = grok::Grok::with_default_patterns();
         let pattern: grok::Pattern = obj
             .compile(pattern_str, false)
             .expect("Error while compiling");
@@ -22,13 +22,13 @@ impl Grok {
     }
 
     pub fn match_against(&self, target: &str) -> HashMap<String, String> {
-        let matches = self
-            .pattern
-            .match_against(target)
-            .expect("No matches found!");
         let mut res: HashMap<String, String> = HashMap::new();
-        for (k, v) in matches.iter() {
-            res.insert(k.to_string(), v.to_string());
+        let matches: Option<grok::Matches> = self.pattern.match_against(target);
+        if matches.is_some() {
+            for (k, v) in matches.unwrap().iter() {
+                res.insert(k.to_string(), v.to_string());
+            }
+            return res;
         }
         return res;
     }

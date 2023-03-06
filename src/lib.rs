@@ -35,20 +35,17 @@ impl Grok {
 
     pub fn match_against(&self, target: &str) -> HashMap<String, String> {
         let mut res: HashMap<String, String> = HashMap::new();
-        if self.pattern.is_some() {
-            let matches: Option<grok::Matches> =
-                self.pattern.as_ref().unwrap().match_against(target);
-            if matches.is_some() {
-                for (k, v) in matches.unwrap().iter() {
-                    res.insert(k.to_string(), v.to_string());
-                }
-                return res;
-            } else {
-                return res;
-            }
-        } else {
+        if self.pattern.is_none() {
             return res;
         }
+        let matches: Option<grok::Matches> = self.pattern.as_ref().unwrap().match_against(target);
+        if matches.is_none() {
+            return res;
+        }
+        for (k, v) in matches.unwrap().iter() {
+            res.insert(k.to_string(), v.to_string());
+        }
+        return res;
     }
 
     pub fn add_pattern(&mut self, name: &str, pattern: &str) {

@@ -9,5 +9,6 @@ name = "rustgrok"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.18.1"
+hashbrown = "0.13"
 grok = "2.0"
+pyo3 = { version = "0.18.1", features = ["hashbrown"] }

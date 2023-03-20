@@ -1,6 +1,6 @@
 [package]
 name = "rustgrok"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -11,4 +11,7 @@ crate-type = ["cdylib"]
 [dependencies]
 hashbrown = "0.13"
 grok = "2.0"
-pyo3 = { version = "0.18.1", features = ["hashbrown"] }
+pyo3 = { version = "0.18.1", features = ["hashbrown", "abi3-py39", "abi3-py310", "abi3-py311"] }
+
+[build-dependencies]
+pyo3-build-config = { git = "https://github.com/pyo3/pyo3", features = ["resolve-config"] }

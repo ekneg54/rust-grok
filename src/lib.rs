@@ -3,13 +3,13 @@ use hashbrown::HashMap;
 use grok;
 use pyo3::prelude::*;
 
-#[pyclass]
-pub struct Grok {
+#[pyclass(name = "Grok", module = "rustgrok")]
+pub struct GrokPy {
     pub obj: grok::Grok,
     pub pattern: Option<grok::Pattern>,
 }
 
-impl Default for Grok {
+impl Default for GrokPy {
     fn default() -> Self {
         Self {
             obj: grok::Grok::with_default_patterns(),
@@ -19,10 +19,10 @@ impl Default for Grok {
 }
 
 #[pymethods]
-impl Grok {
+impl GrokPy {
     #[new]
     pub fn __new__() -> Self {
-        return Grok::default();
+        return GrokPy::default();
     }
 
     pub fn compile(&mut self, pattern_str: &str) {
@@ -53,9 +53,15 @@ impl Grok {
     }
 }
 
+impl From<GrokPy> for grok::Grok {
+    fn from(_: GrokPy) -> Self {
+        grok::Grok::default()
+    }
+}
+
 /// A Python module implemented in Rust.
 #[pymodule]
 fn rustgrok(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_class::<Grok>()?;
+    m.add_class::<GrokPy>()?;
     Ok(())
 }
